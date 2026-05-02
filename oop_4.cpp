@@ -17,26 +17,64 @@ class Bank{
 class Account : private Bank{
     public:
         
-        Account(string n,long long nic){
-            this->name = n;
-            this->CNIC = nic;
+        // Account(string n,long long nic){
+        //     this->name = n;
+        //     this->CNIC = nic;
+        // }
+        
+        void setDetails(string n,long long nic,string dob,int p){
+            if(checkPin(p)){
+                this->name = n;
+                this->pin = p;
+                this->CNIC = nic;
+                this->dob = dob;
+            }else{
+                cout << "PIN must be exactly 4 digits.";
+            }
+        }
+        
+        void resetAccount() {
+            name = "";
+            CNIC = 0;
+            dob = "";
+            pin = 0;
+            balance = 0;
+            accNo = 0;
+        }
+        
+        // string checkAccount(Account &acc){
+        //     if(this->name == acc.name || this->CNIC == acc.CNIC){
+        //         acc.name = "";
+        //         acc.CNIC = 0;
+        //         acc.dob = "";
+        //         acc.pin = 0;
+        //         return "Account already exist\n";
+        //     }
+        //     else{
+        //         creatAccount(acc.name,acc.CNIC,acc.dob,acc.pin);
+        //         return "Account created successfully\n";
+        //     }
+        // }
+        
+        bool checkAccount(Account &acc){
+            if(this->name == acc.name || this->CNIC == acc.CNIC){
+                resetAccount();
+                return false;
+            }
+            else{
+                return true;
+            }
         }
         
         void creatAccount(string n,long long nic,string dob,int p){
-            this->name = n;
-            this->pin = p;
-            this->CNIC = nic;
-            this->dob = dob;
-        }
-        
-        string checkAccount(string n,long long nic,string dob,int p){
-        // string checkAccount(Account &a){
-            if(this->name == n || this->CNIC == nic){
-                return "Account already exist";
-            }
-            else{
-                creatAccount(n,nic,dob,p);
-                return "Account created successfully\n";
+            if(checkPin(p)){
+                this->name = n;
+                this->pin = p;
+                this->CNIC = nic;
+                this->dob = dob;
+                cout << "Account created succesfully.\n";
+            }else{
+                cout << "PIN must be exactly 4 digits.";
             }
         }
         
@@ -44,19 +82,29 @@ class Account : private Bank{
             cout << this->name << "\n" << this->CNIC << "\n";
         }
         
-        // int checkPin(){
-        //     int pinSize = (a.pin == 0) ? 1 : floor(log10(abs(a.pin)))+1;
-        //     if(pin)
-        // }
+        bool checkPin(int pin){
+            int pinSize = (pin == 0) ? 1 : floor(log10(abs(pin)))+1;
+            if(pinSize > 4){
+                return false;
+            }else{
+                return true;
+            }
+        }
     
 };
 
 int main() {
     
-    Account a("Saeed",9232773434),a2("Saeed",9232773434);
-    a.creatAccount("Saeed",9232773434,"23-04-2005",1202);
-    cout << a.checkAccount("Saeed",9232773434,"23-04-2005",1202);
+    Account a,a2;
+    a.setDetails("Saeed",9232773434,"23-04-2005",1202);
+    a2.setDetails("Saeed",9232773435,"23-04-2005",1202);
+    if(a2.checkAccount(a)){
+        a2.creatAccount("Saaed",9232773435,"23-04-2005",1202);
+    }else{
+        cout << "Account already exist\n";
+    }
     a2.showDetails();
+    a.showDetails();
     
     return 0;
 }
